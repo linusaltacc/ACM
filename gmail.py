@@ -6,9 +6,10 @@ from re import S
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from GetPhonenumbers import get_phonenumbers
+from modules.GetPhonenumbers import get_phonenumbers
+from modules.urls import get_urls
 import re
-from attachments import *
+from modules.attachments import *
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly','https://www.googleapis.com/auth/contacts']
 user_id = 'me' # change 'me' with email address for commercial use.
@@ -90,15 +91,9 @@ def get_sender_data(service, user_id, msg_id):
                 body = part.get_payload(decode=True)
                 email_data['body'] = body.decode()
                 body = email_data['body']
-        sender_phone_numbers = []
-
-        for d in ocr_data:
-            get_phonenumbers(d)
-        get_phonenumbers(body)
-        try: 
-            url = str(re.search(r"""(?i)\b((?:[\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[a-z]{2,4}/)(?:[^\s()<>]+|(([^\s()<>]+|(([^\s()<>]+)))))+(?:(([^\s()<>]+|(([^\s()<>]+))))|[^\s`!()\[\]{};:'".,<>?«»""‘’]))""", body).group())
-        except:
-            url = ''
+        body += ocr_data 
+        sender_phone_numbers = get_phonenumbers(body)
+        url = get_urls(body)
         return list_to_dict(['sender_name','sender_email','sender_phone_numbers','url'],[sender_name,sender_email,sender_phone_numbers,url])
     except Exception:
         print("An error occured",message) 
@@ -137,7 +132,7 @@ def get_email(service, user_id, msg_id):
 # print("\nAll Senders Data :",get_all_senders_data(service,user_id))
 # # Gets Senders info of recent email for POC
 # print("\nSenders Data :",get_sender_data(service,user_id,msg_id))
-# # Gets recent email for POC
+# Gets recent email for POC
 # print("\nGet specific email :",get_email(service, user_id,msg_id))
 
 
