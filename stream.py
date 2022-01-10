@@ -30,10 +30,13 @@ def output_contacts(all_senders_data):
 def edit_add_contacts(sender_details,key):
     with st.form(key=str(key)):
         name = st.text_input("Name",sender_details[0])
-        phone = st.text_input("Phone Number",sender_details[1][0])
-        email = st.text_input("Email",sender_details[2])
-        url = st.text_input("Website",sender_details[3])
-
+        phone = []
+        for _ in range(len(sender_details[1])):
+            phone.append(st.text_input("Phone Number {}".format(_),sender_details[1][_]))
+        email = st.text_input("Email " ,sender_details[2])
+        url = []
+        for _ in range(len(sender_details[3])):
+            url.append(st.text_input("Website {}".format(_),sender_details[3][_]))
         submit_button = st.form_submit_button(label='Add Contacts')
     if submit_button:
         create_contacts(contacts_service,[name,phone,email,url])

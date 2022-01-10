@@ -94,7 +94,7 @@ def get_sender_data(service, user_id, msg_id):
         body += ocr_data 
         sender_phone_numbers = get_phonenumbers(body)
         url = get_urls(body)
-        return list_to_dict(['sender_name','sender_email','sender_phone_numbers','url'],[sender_name,sender_email,sender_phone_numbers,url])
+        return list_to_dict(['sender_name','sender_email','sender_phone_numbers','url','ocr_data'],[sender_name,sender_email,sender_phone_numbers,url,ocr_data])
     except Exception:
         print("An error occured",message) 
 
